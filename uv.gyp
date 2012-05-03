@@ -345,6 +345,7 @@
         'test/test-tcp-write-to-half-open-connection.c',
         'test/test-tcp-writealot.c',
         'test/test-threadpool.c',
+        'test/test-threadpool-parallel.c',
         'test/test-mutexes.c',
         'test/test-thread.c',
         'test/test-timer-again.c',

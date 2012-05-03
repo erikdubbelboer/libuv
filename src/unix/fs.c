@@ -704,3 +704,17 @@ int uv_queue_work(uv_loop_t* loop, uv_work_t* req, uv_work_cb work_cb,
 
   return 0;
 }
+
+
+void uv_set_parallel(unsigned int nthreads) {
+  /* eio_set_min_parallel will set a new number of wanted threads
+   * if it's currently lower then nthreads
+   */
+  eio_set_min_parallel(nthreads);
+
+  /* eio_set_max_parallel will set a new number of wanted threads
+   * if it's currently higher then nthreads.
+   * eio_set_max_parallel will also terminate threads if there are to many running.
+   */
+  eio_set_max_parallel(nthreads);
+}
