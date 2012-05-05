@@ -22,29 +22,36 @@
 #include "uv.h"
 #include "task.h"
 
-#ifndef _WIN32
-#include <unistd.h>
-#endif
-
 
 static int work_cb_running     = 0;
 static int work_cb_running_max = 0;
+static uv_mutex_t work_cb_mutex;
 
 
 static void work_cb(uv_work_t* work) {
+  uv_mutex_lock(&work_cb_mutex);
+
   work_cb_running++;
 
   if (work_cb_running > work_cb_running_max) {
     work_cb_running_max = work_cb_running;
   }
 
-#ifdef _WIN32
-  Sleep(1000);
-#else
-  sleep(1);
-#endif
-  
+  uv_mutex_unlock(&work_cb_mutex);
+
+
+  /* We don't want the mutex lock here or else work_cb_running
+   * would only reach 1 even with multiple threads running.
+   */
+
+
+  /* 100 miliseconds should be long enough for both threads to reach this point */
+  uv_sleep(100);
+
+
+  uv_mutex_lock(&work_cb_mutex);
   work_cb_running--;
+  uv_mutex_unlock(&work_cb_mutex);
 }
 
 
@@ -54,7 +61,7 @@ static void after_work_cb(uv_work_t* work) {
 
 
 void add_work(void) {
-  uv_work_t* w = (uv_work_t*) malloc(sizeof(*w));
+  uv_work_t* w = malloc(sizeof(*w));
   ASSERT(w != NULL);
 
   uv_queue_work(uv_default_loop(), w, work_cb, after_work_cb);
@@ -64,11 +71,12 @@ void add_work(void) {
 TEST_IMPL(threadpool_parallel) {
   int i;
 
+  uv_mutex_init(&work_cb_mutex);
+
   uv_set_parallel(1);
 
-  for (i = 0; i < 2; i++) {
-    add_work();
-  }
+  add_work();
+  add_work();
 
   uv_run(uv_default_loop());
 

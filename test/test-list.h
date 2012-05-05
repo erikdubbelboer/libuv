@@ -151,7 +151,6 @@ TEST_DECLARE   (fs_open_dir)
 TEST_DECLARE   (fs_rename_to_existing_file)
 TEST_DECLARE   (threadpool_queue_work_simple)
 TEST_DECLARE   (threadpool_multiple_event_loops)
-TEST_DECLARE   (threadpool_parallel)
 TEST_DECLARE   (eio_overflow)
 TEST_DECLARE   (thread_mutex)
 TEST_DECLARE   (thread_rwlock)
@@ -171,6 +170,7 @@ TEST_DECLARE   (listen_no_simultaneous_accepts)
 TEST_DECLARE   (fs_stat_root)
 #else
 TEST_DECLARE   (spawn_setuid_setgid)
+TEST_DECLARE   (threadpool_parallel)
 #endif
 HELPER_DECLARE (tcp4_echo_server)
 HELPER_DECLARE (tcp6_echo_server)
@@ -338,6 +338,7 @@ TASK_LIST_START
   TEST_ENTRY  (fs_stat_root)
 #else
   TEST_ENTRY  (spawn_setuid_setgid)
+  TEST_ENTRY  (threadpool_parallel)
 #endif
 
   TEST_ENTRY  (fs_file_noent)
@@ -369,7 +370,6 @@ TASK_LIST_START
   TEST_ENTRY  (fs_rename_to_existing_file)
   TEST_ENTRY  (threadpool_queue_work_simple)
   TEST_ENTRY  (threadpool_multiple_event_loops)
-  TEST_ENTRY  (threadpool_parallel)
   TEST_ENTRY  (eio_overflow)
   TEST_ENTRY  (thread_mutex)
   TEST_ENTRY  (thread_rwlock)

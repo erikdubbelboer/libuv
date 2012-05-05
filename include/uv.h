@@ -1251,6 +1251,8 @@ UV_EXTERN uv_err_t uv_kill(int pid, int signum);
 /*
  * Sets the maximum number of threads uv_queue_work uses to perform
  * asynchronous work with.
+ *
+ * This is a no-op on windows.
  */
 UV_EXTERN void uv_set_parallel(unsigned int nthreads);
 

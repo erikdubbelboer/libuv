@@ -25,9 +25,6 @@
 #include "internal.h"
 
 
-static ULONG flags = WT_EXECUTELONGFUNCTION;
-
-
 static void uv_work_req_init(uv_loop_t* loop, uv_work_t* req,
     uv_work_cb work_cb, uv_after_work_cb after_work_cb) {
   uv_req_init(loop, (uv_req_t*) req);
@@ -59,7 +56,7 @@ int uv_queue_work(uv_loop_t* loop, uv_work_t* req, uv_work_cb work_cb,
     uv_after_work_cb after_work_cb) {
   uv_work_req_init(loop, req, work_cb, after_work_cb);
 
-  if (!QueueUserWorkItem(&uv_work_thread_proc, req, flags)) {
+  if (!QueueUserWorkItem(&uv_work_thread_proc, req, WT_EXECUTELONGFUNCTION)) {
     uv__set_sys_error(loop, GetLastError());
     return -1;
   }
@@ -77,5 +74,5 @@ void uv_process_work_req(uv_loop_t* loop, uv_work_t* req) {
 
 
 void uv_set_parallel(unsigned int nthreads) {
-  WT_SET_MAX_THREADPOOL_THREADS(flags, nthreads);
+  /* no-op */
 }
